@@ -24,11 +24,7 @@ export type DiffItemRemove<Key, PrevValue> = {
   prevValue: PrevValue;
 };
 
-export function diffMaps<
-  Key extends string | undefined,
-  Value,
-  PrevValue = Value,
->(
+export function diffMaps<Key extends string | number, Value, PrevValue = Value>(
   prevState: ReadonlyMap<Key, PrevValue>,
   nextState: ReadonlyMap<Key, Value>,
   equality: (prevValue: PrevValue, nextValue: Value) => boolean = Object.is,
