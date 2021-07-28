@@ -1,7 +1,7 @@
-export type DiffItem<Key, Value> =
+export type DiffItem<Key, Value, PrevValue = Value> =
   | DiffItemAdd<Key, Value>
-  | DiffItemChange<Key, Value>
-  | DiffItemRemove<Key, Value>;
+  | DiffItemChange<Key, Value, PrevValue>
+  | DiffItemRemove<Key, PrevValue>;
 
 export type DiffItemAdd<Key, Value> = {
   type: 'add';
@@ -10,26 +10,30 @@ export type DiffItemAdd<Key, Value> = {
   prevValue?: undefined;
 };
 
-export type DiffItemChange<Key, Value> = {
+export type DiffItemChange<Key, Value, PrevValue> = {
   type: 'change';
   key: Key;
   value: Value;
-  prevValue: Value;
+  prevValue: PrevValue;
 };
 
-export type DiffItemRemove<Key, Value> = {
+export type DiffItemRemove<Key, PrevValue> = {
   type: 'remove';
   key: Key;
   value?: undefined;
-  prevValue: Value;
+  prevValue: PrevValue;
 };
 
-export function diffMaps<Key extends string | undefined, Value>(
-  prevState: ReadonlyMap<Key, Value>,
+export function diffMaps<
+  Key extends string | undefined,
+  Value,
+  PrevValue = Value,
+>(
+  prevState: ReadonlyMap<Key, PrevValue>,
   nextState: ReadonlyMap<Key, Value>,
-  equality: (a: Value, b: Value) => boolean = Object.is,
-): Array<DiffItem<Key, Value>> {
-  const changes: Array<DiffItem<Key, Value>> = [];
+  equality: (prevValue: PrevValue, nextValue: Value) => boolean = Object.is,
+): Array<DiffItem<Key, Value, PrevValue>> {
+  const changes: Array<DiffItem<Key, Value, PrevValue>> = [];
 
   for (const [key, value] of prevState) {
     if (!nextState.has(key)) {
