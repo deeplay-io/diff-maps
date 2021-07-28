@@ -5,7 +5,7 @@ export type WriteonlyMap<K, V> = {
   delete(key: K): unknown;
 };
 
-export function applyDiff<Key, Value>(
+export function applyDiff<Key extends string | number, Value>(
   state: WriteonlyMap<Key, Value>,
   diff: Array<DiffItem<Key, Value>>,
 ): void {
