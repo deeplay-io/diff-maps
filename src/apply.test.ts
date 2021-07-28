@@ -7,11 +7,13 @@ test('basic', () => {
     ['2', 0],
   ]);
 
-  applyDiff(state, [
+  const diff = [
     {type: 'remove', key: '1', prevValue: 0},
     {type: 'change', key: '2', value: 1, prevValue: 0},
     {type: 'add', key: '3', value: 1},
-  ]);
+  ];
+
+  applyDiff(state, diff);
 
   expect(state).toEqual(
     new Map([
@@ -27,12 +29,14 @@ test('immutable', () => {
     2: 0,
   });
 
+  const diff = [
+    {type: 'remove', key: '1', prevValue: 0},
+    {type: 'change', key: '2', value: 1, prevValue: 0},
+    {type: 'add', key: '3', value: 1},
+  ];
+
   const nextState = state.withMutations(state => {
-    applyDiff(state, [
-      {type: 'remove', key: '1', prevValue: 0},
-      {type: 'change', key: '2', value: 1, prevValue: 0},
-      {type: 'add', key: '3', value: 1},
-    ]);
+    applyDiff(state, diff);
   });
 
   expect(new Map(nextState)).toEqual(
